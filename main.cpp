@@ -36,8 +36,9 @@ int main(int argc, char const *argv[])
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     
-    logicS::loadData("X05A106C1283M6075.txt");
-
+    // logicS::loadData("X05A106C1283M6075.txt",2);
+    logicS::loadDataINDEPENDECE("corridas2.txt",1);
+    
+    
     return 0;
 }
-
