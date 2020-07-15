@@ -3,7 +3,7 @@
 #include <string>
 #include "logic.hpp"
 #include <fstream>
-
+#include <math.h>
 
 int main(int argc, char const *argv[])
 {
@@ -36,9 +36,23 @@ int main(int argc, char const *argv[])
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     
-    // logicS::loadData("X05A106C1283M6075.txt",2);
-    logicS::loadDataINDEPENDECE("corridas2.txt",1);
-    
-    
+    // logicS::loadDataUNIFORM("X05A106C1283M6075.txt",1);
+    // logicS::loadDataINDEPENDECE("corridas2.txt",1);
+    // logicS::loadDataINDEPENDECE("series.txts",2);
+
+    //0 0.2, 0.2 0.4 
+    // for (double i = 0; i <1; i+=0.001)
+    // {
+    //     double
+    //     fL =0.1;
+    //     int douI = ((int) (i*10)/2)% ((int) (fL * 100));
+    //     // std::cout<<i<<" -- "<<douI<<" --> "<<((int) (i*10))<<" __"<<((int) (fL * 100))<<std::endl;
+    //     std::cout<<i<<" -- "<<douI<<std::endl;
+        
+    // }
+
+    // logicS::loadDataPOKER("Prueba0.txt");
+    // logicS::loadDataPOKER("Prueba1.txt",2);
+    // 
     return 0;
 }

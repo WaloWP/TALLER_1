@@ -256,12 +256,20 @@ namespace logicS
                     std::cerr << e.what() << '\n';
                 }
 
-                for(int i =0; i< 10;i++){
-                    if(
-                        (0.0 + ((double)i/10)) <= dato && (0.1 + ((double)i/10))>dato){
-                        FO[i]++;
-                    }
-                }
+                // for(int i =0; i< 10;i++){
+                //     if(
+                //         (0.0 + ((double)i/10)) <= dato && (0.1 + ((double)i/10))>dato){
+                //         FO[i]++;
+                //         break;
+                //     }
+                // }
+                //clasificate data
+                // (data*10) /(increase-factor)*10 MOD 10
+                // en este caso es 100 porque el factos es 0.1
+                int pos = ((int)( dato*10 )) % 10;
+                // int pos = ((int)( dato*100 )) % 10;
+                // std::cout<<"POS:"<<pos<<" - "<<(int)(dato*100 )<<std::endl;
+                FO[pos]++;
 
                 //increase the data count to use FE
                 countD++;
@@ -515,7 +523,14 @@ namespace logicS
                     std::cout<<"EL NUMERO DE DATOS A LEER ES INFERIOR A 20\n\n";
                 }
             }else if (option == 2){
-                
+                ///////// series
+                // in this case is used 5 class
+                double FO[5][5]={};
+
+                //position to clasification
+                int posA=0,posB=0;
+                // acomulate posible counts
+                long long int countP=0;
                  /// RECOPILATED DATA
                 while (getline(loadF,line)){
                     //rx saved
@@ -527,8 +542,75 @@ namespace logicS
                         std::cerr << e.what() << '\n';
                     }
 
+                    //increase count data
                     countD++;
+
+                    // CLASIFICATE DATA
+                    //(A,B)
+                    if(countD%2 != 0){ //(A, ...)
+                        posA = ((int) (dato*10)/2)% 10; 
+                    }else {//(...,B)
+                        posB = ((int) (dato*10)/2)% 10; 
+                        // save the data in the matrix
+                        FO[posA][posB] ++;
+                        //cuenta de parejas 
+                        countP++;
+                        
+                    }
                     
+                }
+
+                //show matrix 
+                std::cout<<std::setw(12)<<" "<<
+                "[0.0 - 0.2)[0.2 - 0.4)[0.4 - 0.8)[0.8 - 0.9)[0.9 - 1.0)\n";
+                for (int i = 0; i < 5; i++)
+                {
+                    std::cout<<"[ "<<std::setw(3)<<0.0 + i*0.2<<" - "<<std::setw(3)<<0.2 + i*0.2<<")";
+                    for (int j = 0; j < 5; j++)
+                    {
+                        std::cout<<std::setw(9)<<FO[i][j]<<"  ";
+                    }
+                    std::cout<<std::endl;
+                    std::cout<<std::endl;
+                    
+                }
+
+                // probabilidad teorica 1/25
+                double FE = (double)countP/25;
+                
+                //show matrix CHI
+                
+                std::cout<<"\n"<<std::setw(12)<<" "<<
+                "[0.0 - 0.2)[0.2 - 0.4)[0.4 - 0.8)[0.8 - 0.9)[0.9 - 1.0)\n";
+                for (int i = 0; i < 5; i++)
+                {
+                    std::cout<<"[ "<<std::setw(3)<<0.0 + i*0.2<<" - "<<std::setw(3)<<0.2 + i*0.2<<")";
+                    for (int j = 0; j < 5; j++)
+                    {
+                        //calculate the 
+                        FO[i][j]= (double) std::pow( (FO[i][j] - FE),2)/FE;
+                        std::cout<<std::setw(9)<<FO[i][j]<<"  ";
+                    }
+                    std::cout<<std::endl;
+                    std::cout<<std::endl;
+                    
+                }
+
+                //acomulated 
+                double chiCal =0;
+                for (int i = 0; i < 5; i++)
+                    for (int j = 0; j < 5; j++)
+                        chiCal += FO[i][j];//acomulated mounth
+                std::cout
+                <<" GL: 24\n"
+                <<" a : 0.05\n"
+                <<" Chi-Critico     : 36.42\n"
+                <<" Chic-Calculado  : "<<chiCal<<std::endl;
+
+                if(chiCal > 36.42){
+                    std::cout <<"La prueba de serie NO!! ha sido superada"<<std::endl;
+                }else{
+                    std::cout <<"La prueba de serie ha sido superada"<<std::endl;
                 }
             }
             
@@ -538,6 +620,280 @@ namespace logicS
            std::cout<<"\n El fuchero "<<url<<" no se encuentra disponible o no ha podido ser leido\n";
        }
     }
+
+    /***
+     * this function apply poker 
+     * 1 <- poker 3
+     * 2 <- poker 5
+    */
+
+   void loadDataPOKER(std::string url, int option =1){
+       //load file
+       std::ifstream loadF(url);
+
+       if(loadF){//exist?
+            //load line
+            std::string line ="";
+            
+            //cont data
+            long long int countD=0;
+
+            if(option == 1){ 
+                // POKER 3
+                /**
+                 * GL = 2
+                 * CLASES = 3
+                 * xCRITICO = 10.5965
+                 * 
+                 * 3 clases de almacemnamiento 
+                 * 
+                 * 0 -> 3 cartas iguales  = 0.01
+                 * 1 -> 2 cartas iguales  = 0.27
+                 * 2 -> todas diferentes  = 0.72
+                */
+
+                long long int FO[3]={};
+                /// RECOPILATED DATA
+                while (getline(loadF,line)){
+                    //rx saved
+                    double dato;
+                    // casting 
+                    try{
+                        dato = std::stod(line);
+                    }catch(const std::exception& e){
+                        std::cerr << e.what() << '\n';
+                    }
+
+                    //extracción de decimales
+                    //partes enteras, digitos
+                    int dig1,dig2,dig3;
+                    //partes de rrecorrido
+                    // double mov1,mov2,mov3;
+                    dig1 = ((int)(dato*10))%10;
+                    dig2 = ((int)(dato*100))%10;
+                    dig3 = ((int)(dato*1000))%10;
+                    int pos = -1;
+                    // clasificación
+                    if(dig1==dig2 && dig2==dig3){//todos son iguales
+                        std::cout<<dato<<" -> 0 TI  "<<dig1<<dig2<<dig3<<"\n";
+                        pos =0;
+                    }else if((dig1 == dig2 || dig1 == dig3) || dig2 == dig3){ //dos iguales
+                        std::cout<<dato<<" -> 0 DI  "<<dig1<<dig2<<dig3<<"\n";
+                        pos =1;
+                    }else {
+                        std::cout<<dato<<" -> 0 TD  "<<dig1<<dig2<<dig3<<"\n";
+                        pos =2;
+                    }
+                    //conteo
+                    FO[pos]++;
+
+                    //count data
+                    countD++;
+                }
+                //waint frecuence
+                double FE[3]={0.01*countD, 0.27*countD, 0.72*countD};
+
+                //SHOW TABLES
+                int separatorSize = 106,space1=12,space2=16;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                std::cout
+                <<"| "<<std::setw(space1)<<"rango"
+                <<"| "<<std::setw(space2)<<"FO"
+                <<"| "<<std::setw(space2)<<"FE"
+                <<"| "<<std::setw(space2)<<"(FE-FO)²/FE"
+                <<" |"<<std::endl;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                
+
+                //chi cal
+                double chiC, chiCA=0;
+                for (int i = 0; i < 3; i++){
+                    chiC = ((double) std::pow((FE[i]-FO[i]),2)/FE[i]);
+                    chiCA += chiC;
+
+                    std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                    std::cout
+                    <<"| "<<std::setw(space1)<<((i == 0)? "3 IG":((i == 1)? "2 IG 1 DIF":"TD"))
+                    <<"| "<<std::setw(space2)<<FO[i]
+                    <<"| "<<std::setw(space2)<<FE[i]
+                    <<"| "<<std::setw(space2)<<chiC
+                    <<" |"<<std::endl;
+                    std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+
+                }
+
+                //result
+                std::cout<<"|  "<<std::setw(separatorSize*2/3)<<"CHI CALCULADO: "<<std::setw(separatorSize/3 - 4)<<chiCA<<" |"<<std::endl;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+
+                // COMPARATION
+                double chiCrit = 10.5965;
+                std::cout<<"DADO:\n α  = "<< 0.005<<std::endl;
+                std::cout<<" gl = "<< 2<<std::endl;
+                std::cout<<"---> CHIcrit: "<<chiCrit<<std::endl;
+                if(chiCrit < chiCA)
+                    std::cout<<"---------------- NO HA SUPERADO LA PRUEBA DE POKER"<<std::endl;
+                else 
+                    std::cout<<"\n----------------!!  HA SUPERADO LA PRUEBA DE POKER!!!--------------------------------"<<std::endl;
+                
+
+            }else if(option == 2){
+                 // POKER 5
+                /**
+                 * GL = 6
+                 * CLASES = 7
+                 * xCRITICO = 18.5475
+                 * 
+                 * 7 clases de almacemnamiento 
+                 * 
+                 * 0 -> TD todas diferentes  = 0.3024
+                 * 1 -> P un par  = 0.504
+                 * 2 -> 2P dos pares  = 0.108
+                 * 3 -> TP 1 tercia 1 par = 0.009
+                 * 4 -> T 1 tercia = 0.072
+                 * 5 -> poker 4 iguales = 0.0045
+                 * 6 -> Q quintilla = 0.0001
+                 * 
+                */
+
+                long long int FO[7]={};
+                /// RECOPILATED DATA
+                while (getline(loadF,line)){
+                    //rx saved
+                    double dato;
+                    // casting 
+                    try{
+                        dato = std::stod(line);
+                    }catch(const std::exception& e){
+                        std::cerr << e.what() << '\n';
+                    }
+
+                    //extracción de decimales
+                    //partes enteras, digitos
+                    int dig1=0,dig2=0,dig3=0,dig4=0,dig5=0;
+                    //partes de rrecorrido
+                    // double mov1,mov2,mov3;
+                    // dig1 = ((int)(dato*10))%10;
+                    // dig2 = ((int)(dato*100))%10;
+                    // dig3 = ((int)(dato*1000))%10;
+                    // dig4 = ((int)(dato*10000))%10;
+                    // dig5 = ((int)(dato*100000))%10;
+
+                    int classi[10]={};
+                    int acomu[6]={};
+                    // std::cout<<dato<<"--> ";
+                    for (int i = 0; i < 5; i++)
+                    {
+                        // std::cout<<((int)(dato*(std::pow (10,i+1))))%10 <<" ";
+                        classi[((int)(dato*(std::pow (10,i+1))))%10]++ ;
+                    }
+                    // std::cout<<"----"<<std::endl;
+                    for(int i = 0; i < 10; i++){
+                        acomu[classi[i]]++;
+                    }
+                    // for(int i = 1; i < 6; i++){
+                    //     std::cout<<acomu[i]<<" ";
+                    // }
+                    // std::cout<<std::endl;
+                    //95412
+                    //[0,1,1,0,1,1,0,0,0,1] -- calssi
+                    //[5,5,0,0,0,0]
+                    /*
+
+
+                    * 0 -> TD todas diferentes  = 0.3024
+                 * 1 -> P un par  = 0.504
+                 * 2 -> 2P dos pares  = 0.108
+                 * 3 -> TP 1 tercia 1 par = 0.009
+                 * 4 -> T 1 tercia = 0.072
+                 * 5 -> poker 4 iguales = 0.0045
+                 * 6 -> Q quintilla = 0.0001*/
+                    // clasificación
+                    //[ 1, ,2 , ,2 , , , , , ] un for con un int i =0 : 5  n = 10^i
+                    int pos = -1;
+
+                    if(acomu[5]==1){//todos son iguales 
+                        pos = 6;
+                    }else if(acomu[4]==1 && acomu[1]==1){ //poker
+                        pos = 5;
+                    }else if(acomu[3]==1 && acomu[1]==2){ //tercia
+                        pos = 4;
+                    }else if(acomu[3]==1 && acomu[2]==1){//1 Tercia y un par
+                        pos = 3;
+                    }else if(acomu[2]==2 && acomu[1]==1){// 2 pares
+                        pos = 2;
+                    }else if(acomu[2]==1 && acomu[1]==3){//1 par
+                        pos = 1;
+                    }else if(acomu[1]==5){//TD
+                        pos = 0;
+                    }
+                    //FO
+                    FO[pos]++;
+                    //count data
+                    countD++;
+                }
+
+                
+                //waint frecuence
+                double FE[7]={
+                    0.3024*countD, 
+                    0.504*countD, 
+                    0.108*countD,
+                    0.009*countD,
+                    0.072*countD,
+                    0.0045*countD,
+                    0.0001*countD
+                    };
+
+                //SHOW TABLES
+                int separatorSize = 106,space1=12,space2=16;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                std::cout
+                <<"| "<<std::setw(space1)<<"rango"
+                <<"| "<<std::setw(space2)<<"FO"
+                <<"| "<<std::setw(space2)<<"FE"
+                <<"| "<<std::setw(space2)<<"(FE-FO)²/FE"
+                <<" |"<<std::endl;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                
+
+                //chi cal
+                double chiC, chiCA=0;
+                for (int i = 0; i < 7; i++){
+                    chiC = ((double) std::pow((FE[i]-FO[i]),2)/FE[i]);
+                    chiCA += chiC;
+
+                    std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+                    std::cout
+                    <<"| "<<std::setw(space1)<<
+                    ((i == 0)? "TD ":((i == 1)? "1P ":((i == 2)? "2P ":((i == 3)? "1T 1P TP":((i == 4)? "T ":((i == 5)? "PKER ":"QUINT"))))))
+                    <<"| "<<std::setw(space2)<<FO[i]
+                    <<"| "<<std::setw(space2)<<FE[i]
+                    <<"| "<<std::setw(space2)<<chiC
+                    <<" |"<<std::endl;
+                    std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+
+                }
+
+                //result
+                std::cout<<"|  "<<std::setw(separatorSize*2/3)<<"CHI CALCULADO: "<<std::setw(separatorSize/3 - 4)<<chiCA<<" |"<<std::endl;
+                std::cout<<std::setw(separatorSize)<<std::setfill('-')<<"\n"<<std::setfill(' ');
+
+                // COMPARATION
+                double chiCrit = 18.5475;
+                std::cout<<"DADO:\n α  = "<< 0.005<<std::endl;
+                std::cout<<" gl = "<< 2<<std::endl;
+                std::cout<<"---> CHIcrit: "<<chiCrit<<std::endl;
+                if(chiCrit < chiCA)
+                    std::cout<<"---------------- NO HA SUPERADO LA PRUEBA DE POKER"<<std::endl;
+                else 
+                    std::cout<<"\n----------------!!  HA SUPERADO LA PRUEBA DE POKER!!!--------------------------------"<<std::endl;
+                
+            }
+       }else {
+           std::cout<<"No se ah podico cargar el archivo" <<url<<"\n\n";
+       }
+   }
 } // namespace logicS
 
 #endif
