@@ -11,6 +11,9 @@
 #include <fstream> //archiovs
 #include <math.h>
 #include <string>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 
 namespace logicS
 {
@@ -68,13 +71,6 @@ namespace logicS
             }
             return false;
         }
-        
-        /**
-         * this function produce the value of Z with a trust level
-        */
-        double getZCrit(double porcet){
-            
-        }
 
     } // namespace _internal
     
@@ -88,7 +84,7 @@ namespace logicS
      *  int c, increase, default =0 
      *  bool fact, factorizar, default false
      *  bool savef, save data in file, 
-     * 
+     *  int tope, is the topw to stop, -1
      * */
 
     void printRGLC(long long int X0, int a, int m, int c=0, bool fact=false , bool saveF =false, int tope = -1){
@@ -340,7 +336,7 @@ namespace logicS
                 
                 //DECAL
                 double DCAL[10]={};
-                DCAL[0] = std::abs(PEA[0] - POA[0]);
+                // DCAL[0] = std::abs(PEA[0] - POA[0]);
 
                 double DCALMAX =0;
 
@@ -894,6 +890,32 @@ namespace logicS
            std::cout<<"No se ah podico cargar el archivo" <<url<<"\n\n";
        }
    }
+
+
+    /**
+     * This function are the generate a random number to load latter
+     */
+
+    void genCompileRandNumbers( int N, int m = 100000){
+        std::string url = "randCompile.txt";
+        //open file
+        std::ofstream fileOUT(url);
+        /* initialize random seed: */
+        srand (time(NULL));
+
+        while (N!=0)
+        {
+            // Save number 
+            // fileOUT<<rand()<<"\n";
+            fileOUT<<((double)(rand()%m)/m)<<"\n";
+            //decrease N
+            N--; 
+        }
+        
+        fileOUT.close();
+
+    }
+
 } // namespace logicS
 
 #endif

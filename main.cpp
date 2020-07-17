@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <string>
-#include "logic.hpp"
+#include "logic.hpp" // libreria 
 #include <fstream>
 #include <math.h>
 
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
     // GEM
     // logicS::printRGLC(3,16807,2147483647); // c = 0
     // ejersicio en clase 
-    // logicS::printRGLC(5,12,21,0,true);
+    // logicS::printRGLC(5,12,21,0);
 
     // generate data 
     // logicS::printRGLC(5,355,1031,100,false,true);
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     // logicS::printRGLC(5,106,6075,1283,false,true,1000);
     
-    // logicS::loadDataUNIFORM("X05A106C1283M6075.txt",1);
+    // logicS::loadDataUNIFORM("X05A106C1283M6075.txt",2);
     // logicS::loadDataINDEPENDECE("corridas2.txt",1);
     // logicS::loadDataINDEPENDECE("series.txts",2);
 
@@ -54,5 +54,8 @@ int main(int argc, char const *argv[])
     // logicS::loadDataPOKER("Prueba0.txt");
     // logicS::loadDataPOKER("Prueba1.txt",2);
     // 
+    // std::cout << "asd\n";
+
+    logicS::genCompileRandNumbers(100);
     return 0;
 }
