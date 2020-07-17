@@ -55,6 +55,7 @@ int main(int argc, char const *argv[])
     // logicS::loadDataPOKER("Prueba1.txt",2);
     // 
     // std::cout << "asd\n";
+    logicS::loadDataPOKER("randCompile.txt");//3
 
     logicS::genCompileRandNumbers(100);
     return 0;

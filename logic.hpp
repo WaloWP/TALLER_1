@@ -878,7 +878,7 @@ namespace logicS
                 // COMPARATION
                 double chiCrit = 18.5475;
                 std::cout<<"DADO:\n α  = "<< 0.005<<std::endl;
-                std::cout<<" gl = "<< 2<<std::endl;
+                std::cout<<" gl = "<< 6<<std::endl;
                 std::cout<<"---> CHIcrit: "<<chiCrit<<std::endl;
                 if(chiCrit < chiCA)
                     std::cout<<"---------------- NO HA SUPERADO LA PRUEBA DE POKER"<<std::endl;
