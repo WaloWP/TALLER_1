@@ -1,6 +1,12 @@
 # TALLER 1
 
+### Creadores:
 
+* Yahir Eduardo Bravo Tafur 1759650
+
+* Sebastián Porras Sánchez  1759690
+
+  
 
 1. Crear el código necesario para tener las siguientes características de los generadores vistos
 
@@ -56,7 +62,11 @@
    // logicS::printRGLC(3,16807,2147483647,0,false,true); // warning
    ```
 
-   
+   Para poder utilizar los datos de los generadores en una prueba ya sea de uniformidad o independencia se crea un archivo .txt
+   Para así tener un mayor control sobre los datos; en la siguiente función se explica como se genera el archivo.
+   Se identifican los valores para el generador en el siguiente orden: x0,a,m,c,fact,saveF
+   Las cuatro primeras variables son los del generador, la quinta es un boolean para saber si es el generador lineal congruente (false) o 
+   el generador de estándar mínimo(true) y en la última variable tenemos a saveF para generar y guardar el archivo .txt(true)
 
    `
 
@@ -119,9 +129,54 @@
 
    
 
-   ```c++
    
-   ```
+   
+   ## CON RESPECTO A LAS CORRECCIÓN DICHA EN CLASE
 
+   * Implementan del menú:
    
+   ```bash
+    =============================================
+   |            TALLER GENERADORES
+   |=============================================
+   |---------------------------------------------
+   |      PARAMETROS 
+   |---------------------------------------------
+   |Generar:
+   |URL actual:= X027A17C43M100.txt
+   |           X0...............27
+   |           A ...............17
+   |           C ...............43
+   |           M ..............100
+   |---------------------------------------------
+   |      OPCIONES   
+   |---------------------------------------------
+   |Generar:
+   |        >> Iterar con GLC  
+   |           Iterar con GLC Fact(C=0)
+   |           Mostrar GEM (WARNING)
+   |---------------------------------------------
+   |P.B.U.:
+   |           Chi cuadrado x²
+   |           Kolmogorov–Smirnov 
+   |---------------------------------------------
+   |P.B.I.:
+   |           Corridas        
+   |           Series          
+   |           Poker 3         
+   |           Poker 5         
+   |---------------------------------------------
+   |Rand():
+   |           Usar generador del compilador
+   |---------------------------------------------
+   |Exit :
+   |           Exit            
+   ---------------------------------------------
+   ```
+   
+   
+   
+   
+
+Dentro de este menú se encuentras las opciones del taller iterativas, por las cuales se puede testear, la única diferencia  es el uso de de la carga de archivos, antes de generar una prueba con respecto a los parámetros de un generador, debe iterar sobre el para generar el .txt, cuya url aparece en la parte superior de los parámetros. En el caso de testear con el generador del compilador, debe ir a la opción de _'usar generador del compilador'_ la cual le permitirá generar el .txt con los valores del generador.
 
